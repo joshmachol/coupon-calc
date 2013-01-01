@@ -1,6 +1,11 @@
-﻿using CouponCalc.Model;
+﻿using CouponCalc.Common;
+using CouponCalc.Model;
+using CouponCalc.Views;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CouponCalc.ViewModel
 {
@@ -13,6 +18,30 @@ namespace CouponCalc.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IDataService _dataService;
+
+        private RelayCommand<Cart> _GoToCartDetails;
+        public RelayCommand<Cart> GoToCartDetails
+        {
+            get
+            {
+                return _GoToCartDetails ?? (_GoToCartDetails =
+                    new RelayCommand<Cart>(cart =>
+                        SendNavigationRequestMessage(CartDetailView.GetNavigationUri(cart))
+                    ));
+            }
+        }
+
+        private RelayCommand<CartItem> _GoToItemDetails;
+        public RelayCommand<CartItem> GoToItemDetails
+        {
+            get
+            {
+                return _GoToItemDetails ?? (_GoToItemDetails =
+                    new RelayCommand<CartItem>(item =>
+                        SendNavigationRequestMessage(ItemDetailView.GetNavigationUri(item))
+                    ));
+            }
+        }
 
         #region Inpc Prop Carts
 
@@ -53,6 +82,35 @@ namespace CouponCalc.ViewModel
                     Carts.Add(cart);
                 }
             });
+        }
+
+        /// <summary>
+        /// Sends a navigation request message.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        public void SendNavigationRequestMessage(Uri uri)
+        {
+            MessengerInstance.Send(uri, MessageTokens.NavigationRequest);
+        }
+
+        /// <summary>
+        /// Gets the cart with the given Id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public Cart GetCart(Guid id)
+        {
+            return Carts.FirstOrDefault(c => c.Id.Equals(id));
+        }
+
+        /// <summary>
+        /// Gets the item with the given Id.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public CartItem GetItem(Guid id)
+        {
+            return Carts.SelectMany(c => c.Items).FirstOrDefault(i => i.Id.Equals(id));
         }
 
         ////public override void Cleanup()

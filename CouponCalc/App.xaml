@@ -1,13 +1,15 @@
 ﻿<Application x:Class="CouponCalc.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:vm="clr-namespace:CouponCalc.ViewModel"
-             xmlns:local="clr-namespace:CouponCalc">
+             xmlns:local="clr-namespace:CouponCalc"
+             xmlns:common="clr-namespace:CouponCalc.Common">
 
     <!--Application Resources-->
     <Application.Resources>
@@ -16,9 +18,17 @@
                 <ResourceDictionary Source="Common/CouponCalcStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         
+            <system:String x:Key="AppName">Coupon Calc</system:String>
+            
             <local:LocalizedStrings x:Key="LocalizedStrings" />
 
             <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="true" />
+
+            <!--Converters-->
+            <common:EnumToIEnumerable x:Key="EnumToIEnumerable" />
+            <common:StoreToImageSource x:Key="StoreToImageSource" />
+            <common:CartsToUniqueStoreList x:Key="CartsToUniqueStoreList" />
+            <common:CartItemToTotalEquationString x:Key="CartItemToTotalEquationString" />
             
         </ResourceDictionary>
     </Application.Resources>

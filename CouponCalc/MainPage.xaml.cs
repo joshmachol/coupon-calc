@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
+﻿using CouponCalc.Common;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
+using System;
+using System.Windows.Navigation;
 
 namespace CouponCalc
 {
@@ -15,6 +11,8 @@ namespace CouponCalc
         public MainPage()
         {
             InitializeComponent();
+
+            Messenger.Default.Register<Uri>(this, MessageTokens.NavigationRequest, uri => NavigationService.Navigate(uri));
         }
     }
 }

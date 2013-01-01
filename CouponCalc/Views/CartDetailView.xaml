@@ -1,0 +1,78 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="CouponCalc.Views.CartDetailView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="{StaticResource AppName}" Style="{StaticResource PhoneTextNormalStyle}"/>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Name" Style="{StaticResource PhoneTextSmallStyle}" />
+                <TextBox Grid.Row="1" Margin="0,-10,0,0" Text="{Binding Name, Mode=TwoWay}" />
+
+                <TextBlock Grid.Row="2" Text="Store" Style="{StaticResource PhoneTextSmallStyle}" />
+                <toolkit:ListPicker Grid.Row="3" Margin="12,-5,12,12"
+                                    ItemsSource="{Binding Store, Converter={StaticResource EnumToIEnumerable}, Mode=OneTime}"
+                                    SelectedItem="{Binding Store, Mode=TwoWay}" />
+
+                <TextBlock Grid.Row="4" Text="{Binding Items.Count, StringFormat='In this cart (\{0\})'}" Style="{StaticResource PhoneTextSmallStyle}" />
+                <ListBox Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding Items}" Style="{StaticResource StretchListBoxStyle}">
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Main.GoToItemDetails, Source={StaticResource Locator}}" CommandParameter="{Binding}" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding Converter={StaticResource CartItemToTotalEquationString}}"
+                                               Style="{StaticResource PhoneTextAccentStyle}" />
+                                    <TextBlock Grid.Row="2"
+                                               Text="{Binding ExpirationDate, StringFormat=\{0:d\}}"
+                                               Style="{StaticResource PhoneTextSmallStyle}" />
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

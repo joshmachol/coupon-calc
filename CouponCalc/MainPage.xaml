@@ -6,34 +6,28 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    d:DataContext="{d:DesignData Main, Source={StaticResource Locator}}"
     DataContext="{Binding Main, Source={StaticResource Locator}}"
-    SupportedOrientations="PortraitOrLandscape"
-    Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->
-        <phone:Pivot Title="Coupon Calc">
+        <phone:Pivot Title="{StaticResource AppName}">
             <!--Pivot item plans-->
             <phone:PivotItem Header="carts">
                 <Grid>
-                    <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Carts}">
-                        
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
+                    <ListBox ItemsSource="{Binding Carts}" Style="{StaticResource StretchListBoxStyle}">
                         
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <HyperlinkButton Style="{StaticResource }">
+                                <Button Command="{Binding Main.GoToCartDetails, Source={StaticResource Locator}}" CommandParameter="{Binding}"
+                                        toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
                                     <Grid Margin="0,0,0,8">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -42,12 +36,10 @@
 
                                         <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
                                         <TextBlock Margin="0,6,12,0" HorizontalAlignment="Right"
-                                                   Text="{Binding ExpirationDate, StringFormat=\{0:d\}}"
-                                                   Style="{StaticResource PhoneTextAccentStyle}" />
-                                        <TextBlock Grid.Row="1" Text="{Binding Store}"
-                                                   Style="{StaticResource PhoneTextAccentStyle}" />
+                                                   Text="{Binding ExpirationDate, StringFormat=\{0:d\}}" Style="{StaticResource PhoneTextAccentStyle}" />
+                                        <TextBlock Grid.Row="1" Text="{Binding Store}" Style="{StaticResource PhoneTextAccentStyle}" />
                                     </Grid>
-                                </HyperlinkButton>
+                                </Button>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -56,7 +48,34 @@
 
             <!--Pivot item my stores-->
             <phone:PivotItem Header="my stores">
-                <Grid/>
+                <Grid>
+                    <ListBox ItemsSource="{Binding Carts, Converter={StaticResource CartsToUniqueStoreList}}">
+                        
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <toolkit:WrapPanel Margin="12,0,0,0" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Button toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
+                                    <Border Margin="0,0,12,12" Width="210" Height="210" Background="White">
+                                        <Grid>
+                                            <Image Stretch="None" Source="{Binding Store, Converter={StaticResource StoreToImageSource}}" />
+                                            <Border Margin="0,8,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                    Height="30" Width="30" CornerRadius="30"
+                                                    Background="{StaticResource PhoneAccentBrush}">
+                                                <TextBlock Margin="0,-4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding CartCount}" Foreground="White" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </phone:PivotItem>
 
             <!--Pivot item past hauls-->

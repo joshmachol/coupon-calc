@@ -8,7 +8,9 @@ namespace CouponCalc.Model
     {
         Publix = 0,
         Target = 1,
-        Walmart = 2,
+        WalMart = 2,
+        Kmart = 3,
+        Kroger = 4,
     }
 
     public class Cart : BindableBase
@@ -38,8 +40,42 @@ namespace CouponCalc.Model
         private ObservableCollection<CartItem> _Items;
         public ObservableCollection<CartItem> Items
         {
-            get { return _Items ?? (_Items = new ObservableCollection<CartItem>()); }
-            set { SetProperty(ref _Items, value, "Items"); }
+            get { return _Items ?? (Items = new ObservableCollection<CartItem>()); }
+            set
+            {
+                SetProperty(ref _Items, value, "Items");
+
+                if (_Items != null)
+                {
+                    _Items.CollectionChanged += (sender, args) =>
+                        {
+                            TotalBeforeDiscount = _Items.Sum(i => i.Price);
+                            DiscountTotal = _Items.Sum(i => i.Discounts.Sum(d => d.Discount));
+                            TotalAfterDiscount = _TotalBeforeDiscount - _DiscountTotal;
+                        };
+                }
+            }
+        }
+
+        private double _TotalBeforeDiscount;
+        public double TotalBeforeDiscount
+        {
+            get { return _TotalBeforeDiscount; }
+            set { SetProperty(ref _TotalBeforeDiscount, value, "TotalBeforeDiscount"); }
+        }
+
+        private double _DiscountTotal;
+        public double DiscountTotal
+        {
+            get { return _DiscountTotal; }
+            set { SetProperty(ref _DiscountTotal, value, "DiscountTotal"); }
+        }
+
+        private double _TotalAfterDiscount;
+        public double TotalAfterDiscount
+        {
+            get { return _TotalAfterDiscount; }
+            set { SetProperty(ref _TotalAfterDiscount, value, "TotalAfterDiscount"); }
         }
 
         // Indexers

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Resources;
-using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Navigation;
+﻿using CouponCalc.Resources;
+using CouponCalc.ViewModel;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using CouponCalc.Resources;
-using CouponCalc.ViewModel;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Markup;
+using System.Windows.Navigation;
 
 namespace CouponCalc
 {
@@ -19,6 +18,17 @@ namespace CouponCalc
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
+
+        /// <summary>
+        /// Gets the view model locator for the app.
+        /// </summary>
+        /// <value>
+        /// The locator.
+        /// </value>
+        public static ViewModelLocator Locator
+        {
+            get { return App.Current.Resources["Locator"] as ViewModelLocator; }
+        }
 
         /// <summary>
         /// Constructor for the Application object.

@@ -17,12 +17,14 @@ namespace CouponCalc.Design
         public void GetCarts(Action<IEnumerable<Cart>, Exception> callback)
         {
             var carts = new List<Cart>();
+            var randomizer = new Random();
+            var storeEnumCount = Enum.GetNames(typeof(Store)).Length;
 
             for (int i = 0; i < 10; i++)
             {
                 var cart = new Cart();
                 cart.Name = "Cart " + (i + 1);
-                cart.Store = Store.Publix;
+                cart.Store = (Store)randomizer.Next(0, storeEnumCount);
 
                 for (int j = 0; j < 10; j++)
                 {

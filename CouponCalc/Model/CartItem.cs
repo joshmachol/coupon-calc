@@ -35,6 +35,13 @@ namespace CouponCalc.Model
             set { SetProperty(ref _Quantity, value, "Quantity"); }
         }
 
+        private DateTime _ExpirationDate;
+        public DateTime ExpirationDate
+        {
+            get { return _ExpirationDate; }
+            set { SetProperty(ref _ExpirationDate, value, "ExpirationDate"); }
+        }
+
         private ObservableCollection<CartItemDiscount> _Discounts;
         public ObservableCollection<CartItemDiscount> Discounts
         {
