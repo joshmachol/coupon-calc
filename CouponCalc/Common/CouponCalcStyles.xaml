@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
 
     <!-- Standard styles -->
 
@@ -11,22 +12,122 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ButtonBase">
-                    <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" />
+                    <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     
-    <Style x:Key="StretchListBoxStyle" TargetType="ListBox">
+    <Style x:Key="SelectableListBoxItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualStateGroup.States>
+                                    <VisualState x:Name="Unselected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedVisual" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"></DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedVisual" Storyboard.TargetProperty="Fill">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneAccentBrush}"></DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup.States>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        
+                        <Rectangle x:Name="SelectedVisual" Width="4" HorizontalAlignment="Left" />
+                        <ContentControl Margin="{TemplateBinding Margin}"
+                                        Padding="{TemplateBinding Padding}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        Content="{TemplateBinding Content}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ListBoxBaseStyle" TargetType="ListBox">
+        <Setter Property="toolkit:TiltEffect.IsTiltEnabled" Value="True" />
+    </Style>
+
+    <Style x:Key="StretchListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource ListBoxBaseStyle}">
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
-                <Style TargetType="ListBoxItem">
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource SelectableListBoxItemStyle}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Cart item template for lists -->
+
+    <DataTemplate x:Name="CartItemTemplate">
+        <!--<Button Command="{Binding Main.GoToCartDetails, Source={StaticResource Locator}}"
+                CommandParameter="{Binding}" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">-->
+            <Grid Margin="0,0,0,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
+                <TextBlock Margin="0,6,12,0" HorizontalAlignment="Right" Text="{Binding ExpirationDate, StringFormat='expires \{0:M\}'}" Style="{StaticResource PhoneTextAccentStyle}" />
+                <TextBlock Grid.Row="1" Text="{Binding Items.Count, StringFormat='\{0:} products'}" Style="{StaticResource PhoneTextAccentStyle}" />
+                <TextBlock Grid.Row="2" Text="{Binding Store}" Style="{StaticResource PhoneTextSmallStyle}" />
+            </Grid>
+        <!--</Button>-->
+    </DataTemplate>
+    
+    <!-- CartItem item template for lists -->
+
+    <DataTemplate x:Name="CartItemItemTemplate">
+        <!--<Button Command="{Binding Main.GoToItemDetails, Source={StaticResource Locator}}"
+                CommandParameter="{Binding}" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">-->
+            <Grid Margin="0,0,0,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
+                <TextBlock Grid.Row="1" Text="{Binding Converter={StaticResource CartItemToTotalEquationString}}" Style="{StaticResource PhoneTextAccentStyle}" />
+                <TextBlock Grid.Row="2" Text="{Binding ExpirationDate, StringFormat='expires \{0:M\}'}" Style="{StaticResource PhoneTextSmallStyle}" />
+            </Grid>
+        <!--</Button>-->
+    </DataTemplate>
+    
+    <!-- CartItemDiscount item template for lists -->
+
+    <DataTemplate x:Name="DiscountItemTemplate">
+        <Grid Margin="0,0,0,8">
+            <TextBlock Text="{Binding ExpirationDate, StringFormat='expires \{0:M\}'}" HorizontalAlignment="Right" Style="{StaticResource PhoneTextAccentStyle}" />
+            <StackPanel>
+                <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextTitle3Style}" />
+                <TextBlock Text="{Binding Discount, StringFormat=\{0:c\}}" Style="{StaticResource PhoneTextAccentStyle}" />
+                <TextBlock Text="{Binding Type}" Style="{StaticResource PhoneTextSmallStyle}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
 
 </ResourceDictionary>

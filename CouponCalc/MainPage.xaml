@@ -18,31 +18,14 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->
-        <phone:Pivot Title="{StaticResource AppName}">
+        <phone:Pivot x:Name="Pivot" Title="{StaticResource AppName}">
             <!--Pivot item plans-->
             <phone:PivotItem Header="carts">
                 <Grid>
-                    <ListBox ItemsSource="{Binding Carts}" Style="{StaticResource StretchListBoxStyle}">
-                        
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Button Command="{Binding Main.GoToCartDetails, Source={StaticResource Locator}}" CommandParameter="{Binding}"
-                                        toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
-                                    <Grid Margin="0,0,0,8">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
-                                        <TextBlock Margin="0,6,12,0" HorizontalAlignment="Right"
-                                                   Text="{Binding ExpirationDate, StringFormat=\{0:d\}}" Style="{StaticResource PhoneTextAccentStyle}" />
-                                        <TextBlock Grid.Row="1" Text="{Binding Store}" Style="{StaticResource PhoneTextAccentStyle}" />
-                                    </Grid>
-                                </Button>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <ListBox ItemsSource="{Binding Carts}"
+                             SelectedItem="{Binding SelectedCart, Mode=TwoWay}"
+                             ItemTemplate="{StaticResource CartItemTemplate}"
+                             Style="{StaticResource StretchListBoxStyle}" />
                 </Grid>
             </phone:PivotItem>
 
@@ -59,8 +42,8 @@
                         
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Button toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
-                                    <Border Margin="0,0,12,12" Width="210" Height="210" Background="White">
+                                <Button Command="{Binding Main.GoToCartsByStoreDetails, Source={StaticResource Locator}}" CommandParameter="{Binding Store}" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
+                                    <Border Margin="0,0,12,12" Width="208" Height="208" Background="{StaticResource PhoneInverseBackgroundBrush}">
                                         <Grid>
                                             <Image Stretch="None" Source="{Binding Store, Converter={StaticResource StoreToImageSource}}" />
                                             <Border Margin="0,8,8,0" HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -84,5 +67,13 @@
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="CartsAppBar" IsVisible="True">
+            <shell:ApplicationBarIconButton Click="AddCart" Text="add" IconUri="/Assets/AppBar/add.png" />
+            <shell:ApplicationBarIconButton Click="EditSelectedCart" Text="edit" IconUri="/Assets/AppBar/edit.png" />
+            <shell:ApplicationBarIconButton Click="DeleteSelectedCart" Text="delete" IconUri="/Toolkit.Content/ApplicationBar.Delete.png" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
     
 </phone:PhoneApplicationPage>

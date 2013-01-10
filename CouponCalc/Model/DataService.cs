@@ -15,40 +15,8 @@ namespace CouponCalc.Model
 
         public void GetCarts(Action<IEnumerable<Cart>, Exception> callback)
         {
-            var carts = new List<Cart>();
-            var randomizer = new Random();
-            var storeEnumCount = Enum.GetNames(typeof (Store)).Length;
-
-            for (int i = 0; i < 10; i++)
-            {
-                var cart = new Cart();
-                cart.Name = "Cart " + (i + 1);
-                cart.Store = (Store)randomizer.Next(0, storeEnumCount);
-
-                for (int j = 0; j < 10; j++)
-                {
-                    var item = new CartItem();
-                    item.Name = "Cart Item " + (j + 1);
-                    item.Price = j * 10;
-                    item.Quantity = j;
-                    item.Taxable = i % 2 == 0;
-
-                    for (int k = 0; k < 3; k++)
-                    {
-                        var discount = new CartItemDiscount();
-                        discount.Name = "Discount " + (i + 1);
-                        discount.Discount = k * .75;
-                        discount.Type = DiscountType.Store;
-                        item.Discounts.Add(discount);
-                    }
-
-                    cart.Items.Add(item);
-                }
-
-                carts.Add(cart);
-            }
-
-            callback(carts, null);
+            var design = new Design.DesignDataService();
+            design.GetCarts(callback);
         }
     }
 }

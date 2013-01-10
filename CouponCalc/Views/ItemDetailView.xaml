@@ -6,30 +6,55 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{Binding Main.Carts[0].Items[0], Source={StaticResource Locator}}"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <!--Pivot Control-->
+        <phone:Pivot x:Name="Pivot" Title="{StaticResource AppName}">
+            <!--Pivot item cart item-->
+            <phone:PivotItem Header="product">
+                <ScrollViewer Padding="0,0,0,12" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Name" Style="{StaticResource PhoneTextSmallStyle}" />
+                        <TextBox Margin="0,-10,0,0" Text="{Binding Name, Mode=TwoWay}" />
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="{StaticResource AppName}" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="{Binding Name}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+                        <TextBlock Text="Price" Style="{StaticResource PhoneTextSmallStyle}" />
+                        <TextBox InputScope="Number" Text="{Binding Price, StringFormat=\{0:c\}, Mode=TwoWay}" />
 
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+                        <TextBlock Text="Quanitity" Style="{StaticResource PhoneTextSmallStyle}" />
+                        <TextBox InputScope="Number" Text="{Binding Quantity, Mode=TwoWay}" />
 
-        </Grid>
+                        <CheckBox Content="Taxable" IsChecked="{Binding Taxable, Mode=TwoWay}" />
+
+                        <TextBlock Text="Discounts expire by" Style="{StaticResource PhoneTextSmallStyle}" />
+                        <TextBlock Text="{Binding ExpirationDate, StringFormat=\{0:d\}}" Style="{StaticResource PhoneTextNormalStyle}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </phone:PivotItem>
+            
+            <!--Pivot item discounts-->
+            <phone:PivotItem Header="{Binding Discounts.Count, StringFormat='discounts (\{0\})'}">
+                <ListBox ItemsSource="{Binding Discounts}"
+                         SelectedItem="{Binding Main.SelectedDiscount, Source={StaticResource Locator}, Mode=TwoWay}"
+                         ItemTemplate="{StaticResource DiscountItemTemplate}"
+                         Style="{StaticResource StretchListBoxStyle}" />
+            </phone:PivotItem>
+        </phone:Pivot>
     </Grid>
+    
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="DiscountsAppBar" IsVisible="False">
+            <shell:ApplicationBarIconButton Click="AddDiscount" Text="add" IconUri="/Assets/AppBar/add.png" />
+            <shell:ApplicationBarIconButton Click="EditSelectedDiscount" Text="edit" IconUri="/Assets/AppBar/edit.png" />
+            <shell:ApplicationBarIconButton Click="DeleteSelectedDiscount" Text="delete" IconUri="/Toolkit.Content/ApplicationBar.Delete.png" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>

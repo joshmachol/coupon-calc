@@ -94,7 +94,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Converters.cs" />
+    <Compile Include="Common\LoopingDataSources.cs" />
     <Compile Include="Common\MessageTokens.cs" />
+    <Compile Include="Common\MoneyPicker.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -119,6 +121,9 @@
     <Compile Include="Views\CartDetailView.xaml.cs">
       <DependentUpon>CartDetailView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CartsByStoreDetailView.xaml.cs">
+      <DependentUpon>CartsByStoreDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DiscountDetailView.xaml.cs">
       <DependentUpon>DiscountDetailView.xaml</DependentUpon>
     </Compile>
@@ -141,9 +146,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\AppBar\add.png" />
+    <Content Include="Assets\AppBar\edit.png" />
+    <Content Include="Assets\AppBar\pin.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\icon_drugstore.png" />
+    <Content Include="Assets\icon_grocerystore.png" />
+    <Content Include="Assets\icon_supermarket.png" />
     <Content Include="Assets\StoreLogos\logo_Kmart.png" />
     <Content Include="Assets\StoreLogos\logo_Kroger.png" />
     <Content Include="Assets\StoreLogos\logo_Publix.png" />
@@ -178,6 +189,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CartDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CartsByStoreDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -216,6 +231,9 @@
     <Reference Include="System.Windows.Interactivity">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Laurent Bugnion (GalaSoft)\Mvvm Light Toolkit\Binaries\WP71\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsPhoneHelp">
+      <HintPath>..\..\windowsphone-helper\src\bin\Release\WindowsPhoneHelp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

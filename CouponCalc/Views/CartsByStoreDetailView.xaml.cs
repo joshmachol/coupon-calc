@@ -1,28 +1,43 @@
 ﻿using CouponCalc.Common;
+using CouponCalc.Model;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
 using System;
+using System.Linq;
 using System.Windows.Navigation;
 
-namespace CouponCalc
+namespace CouponCalc.Views
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class CartsByStoreDetailView : PhoneApplicationPage
     {
-        private const int CartsPivotItemIndex = 0;
+        public const string NavigateToMeUri = "/Views/CartsByStoreDetailView.xaml?store=";
 
-        public MainPage()
+        private Store _store;
+
+        public CartsByStoreDetailView()
         {
             InitializeComponent();
 
             Messenger.Default.Register<Uri>(this, MessageTokens.NavigationRequest, uri => NavigationService.Navigate(uri));
+        }
 
-            Loaded += (sender, args) =>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (DataContext != null) return;
+            _store = (Store)Enum.Parse(typeof(Store), NavigationContext.QueryString["store"]);
+            dynamic context = new
             {
-                Pivot.SelectionChanged += (o, eventArgs) =>
-                {
-                    ApplicationBar.IsVisible = Pivot.SelectedIndex == CartsPivotItemIndex;
-                };
+                Store = _store,
+                Carts = App.Locator.Main.Carts.Where(c => c.Store == _store)
             };
+            DataContext = context;
+        }
+
+        public static Uri GetNavigationUri(Store store)
+        {
+            return new Uri(NavigateToMeUri + store, UriKind.Relative);
         }
 
         private void AddCart(object sender, EventArgs e)

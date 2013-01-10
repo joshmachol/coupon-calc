@@ -19,27 +19,30 @@ namespace CouponCalc.Design
             var carts = new List<Cart>();
             var randomizer = new Random();
             var storeEnumCount = Enum.GetNames(typeof(Store)).Length;
+            var discountTypeEnumCount = Enum.GetNames(typeof(DiscountType)).Length;
 
             for (int i = 0; i < 10; i++)
             {
                 var cart = new Cart();
                 cart.Name = "Cart " + (i + 1);
-                cart.Store = (Store)randomizer.Next(0, storeEnumCount);
+                cart.Store = (Store)randomizer.Next(storeEnumCount);
 
                 for (int j = 0; j < 10; j++)
                 {
-                    var item = new CartItem();
+                    var item = new CartItem(cart);
                     item.Name = "Cart Item " + (j + 1);
                     item.Price = j * 10;
                     item.Quantity = j;
                     item.Taxable = i % 2 == 0;
+                    item.ExpirationDate = DateTime.Now;
 
                     for (int k = 0; k < 3; k++)
                     {
-                        var discount = new CartItemDiscount();
+                        var discount = new CartItemDiscount(item);
                         discount.Name = "Discount " + (i + 1);
                         discount.Discount = k * .75;
-                        discount.Type = DiscountType.Store;
+                        discount.Type = (DiscountType)randomizer.Next(discountTypeEnumCount);
+                        discount.ExpirationDate = DateTime.Now;
                         item.Discounts.Add(discount);
                     }
 

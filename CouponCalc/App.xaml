@@ -19,6 +19,7 @@
             </ResourceDictionary.MergedDictionaries>
         
             <system:String x:Key="AppName">Coupon Calc</system:String>
+            <system:String x:Key="ExpirationDateFormat">expires \{0:M\}</system:String>
             
             <local:LocalizedStrings x:Key="LocalizedStrings" />
 
@@ -28,7 +29,9 @@
             <common:EnumToIEnumerable x:Key="EnumToIEnumerable" />
             <common:StoreToImageSource x:Key="StoreToImageSource" />
             <common:CartsToUniqueStoreList x:Key="CartsToUniqueStoreList" />
+            <common:ValueEqualsConverterParam x:Key="ValueEqualsConverterParam" />
             <common:CartItemToTotalEquationString x:Key="CartItemToTotalEquationString" />
+            <common:BoolToTransparentOrAccentBrush x:Key="BoolToTransparentOrAccentBrush" />
             
         </ResourceDictionary>
     </Application.Resources>

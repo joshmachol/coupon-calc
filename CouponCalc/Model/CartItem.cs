@@ -7,6 +7,13 @@ namespace CouponCalc.Model
     public class CartItem : BindableBase
     {
         // Properties
+        private Cart _OwningCart;
+        public Cart OwningCart
+        {
+            get { return _OwningCart; }
+            set { SetProperty(ref _OwningCart, value, "OwningCart"); }
+        }
+
         private string _Name;
         public string Name
         {
@@ -45,8 +52,21 @@ namespace CouponCalc.Model
         private ObservableCollection<CartItemDiscount> _Discounts;
         public ObservableCollection<CartItemDiscount> Discounts
         {
-            get { return _Discounts ?? (_Discounts = new ObservableCollection<CartItemDiscount>()); }
-            set { SetProperty(ref _Discounts, value, "Discounts"); }
+            get { return _Discounts ?? (Discounts = new ObservableCollection<CartItemDiscount>()); }
+            set
+            {
+                SetProperty(ref _Discounts, value, "Discounts");
+
+                if (_Discounts != null)
+                {
+                    _Discounts.CollectionChanged += (sender, args) =>
+                        {
+                            ExpirationDate = _Discounts.Select(d => d.ExpirationDate)
+                                                       .OrderByDescending(d => d)
+                                                       .FirstOrDefault();
+                        };
+                }
+            }
         }
 
         // Indexers
@@ -59,6 +79,15 @@ namespace CouponCalc.Model
         public CartItemDiscount this[Guid id]
         {
             get { return GetDiscount(id); }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CartItem" /> class.
+        /// </summary>
+        /// <param name="owningCart">The owning cart.</param>
+        public CartItem(Cart owningCart)
+        {
+            OwningCart = owningCart;
         }
 
         // Methods

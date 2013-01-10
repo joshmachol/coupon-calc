@@ -5,11 +5,13 @@
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    d:DataContext="{Binding Main.Carts[0], Source={StaticResource Locator}}"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
@@ -43,36 +45,35 @@
                 <TextBlock Grid.Row="2" Text="Store" Style="{StaticResource PhoneTextSmallStyle}" />
                 <toolkit:ListPicker Grid.Row="3" Margin="12,-5,12,12"
                                     ItemsSource="{Binding Store, Converter={StaticResource EnumToIEnumerable}, Mode=OneTime}"
-                                    SelectedItem="{Binding Store, Mode=TwoWay}" />
+                                    SelectedItem="{Binding Store, Mode=TwoWay}">
+                    
+                    <toolkit:ListPicker.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding}" />
+                                <Image Width="45" Height="45" Stretch="Uniform" HorizontalAlignment="Right"
+                                       Source="{Binding Converter={StaticResource StoreToImageSource}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </toolkit:ListPicker.ItemTemplate>
+                </toolkit:ListPicker>
 
                 <TextBlock Grid.Row="4" Text="{Binding Items.Count, StringFormat='In this cart (\{0\})'}" Style="{StaticResource PhoneTextSmallStyle}" />
-                <ListBox Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding Items}" Style="{StaticResource StretchListBoxStyle}">
-
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding Main.GoToItemDetails, Source={StaticResource Locator}}" CommandParameter="{Binding}" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource EmptyButtonStyle}">
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}" />
-                                    <TextBlock Grid.Row="1"
-                                               Text="{Binding Converter={StaticResource CartItemToTotalEquationString}}"
-                                               Style="{StaticResource PhoneTextAccentStyle}" />
-                                    <TextBlock Grid.Row="2"
-                                               Text="{Binding ExpirationDate, StringFormat=\{0:d\}}"
-                                               Style="{StaticResource PhoneTextSmallStyle}" />
-                                </Grid>
-                            </Button>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-
-                </ListBox>
+                <ListBox Grid.Row="5" Grid.ColumnSpan="2"
+                         ItemsSource="{Binding Items}"
+                         SelectedItem="{Binding Main.SelectedItem, Source={StaticResource Locator}, Mode=TwoWay}"
+                         ItemTemplate="{StaticResource CartItemItemTemplate}"
+                         Style="{StaticResource StretchListBoxStyle}" />
             </Grid>
         </Grid>
     </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="ItemsAppBar" IsVisible="True">
+            <shell:ApplicationBarIconButton Click="AddItem" Text="add" IconUri="/Assets/AppBar/add.png" />
+            <shell:ApplicationBarIconButton Click="EditSelectedItem" Text="edit" IconUri="/Assets/AppBar/edit.png" />
+            <shell:ApplicationBarIconButton Click="DeleteSelectedItem" Text="delete" IconUri="/Toolkit.Content/ApplicationBar.Delete.png" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>
